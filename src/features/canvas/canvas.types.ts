@@ -13,9 +13,13 @@ export type ToolType =
   | "pdfPage"
   | "laser";
 
+export type CanvasPointerType = "mouse" | "pen" | "touch" | "unknown";
+
 export interface Point {
   x: number;
   y: number;
+  inputType?: CanvasPointerType;
+  // Stored now so future pressure-sensitive rendering can use the same stroke model.
   pressure?: number;
 }
 

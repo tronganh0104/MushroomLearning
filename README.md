@@ -61,6 +61,15 @@ Build frontend:
 npm run build
 ```
 
+Chạy unit test:
+
+```bash
+npm test
+```
+
+Unit test hiện tại tập trung vào logic canvas cốt lõi: pointer input, stroke utilities,
+hit testing cho eraser, undo/redo history và board/page state. Repo chưa thêm e2e test.
+
 Chạy Tauri desktop shell sau khi đã cài Rust và các yêu cầu của Tauri:
 
 ```bash

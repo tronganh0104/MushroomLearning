@@ -29,6 +29,18 @@ export function createPenStroke({ pageId, points, color, width }: CreateStrokeIn
   };
 }
 
+export function appendStrokePoints(stroke: StrokeObject, points: Point[]): StrokeObject {
+  if (points.length === 0) {
+    return stroke;
+  }
+
+  return {
+    ...stroke,
+    points: [...stroke.points, ...points],
+    updatedAt: new Date().toISOString()
+  };
+}
+
 export function toLinePoints(points: Point[]): number[] {
   return points.flatMap((point) => [point.x, point.y]);
 }
