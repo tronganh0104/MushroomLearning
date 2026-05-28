@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type ChangeEvent, useRef, useState } from "react";
 import { initialCanvasToolState } from "../../canvas/canvas.store";
 import { CanvasStage } from "../../canvas/components/CanvasStage";
 import { CanvasToolbar } from "../../canvas/components/CanvasToolbar";
@@ -10,16 +10,32 @@ import {
   redoCanvasHistory,
   undoCanvasHistory
 } from "../../canvas/history/canvasHistory";
+import {
+  downloadLessonInkFile,
+  getLessonInkDownloadName,
+  readLessonInkFile
+} from "../../documents/lessoninkFileService";
+import type { LessonInkFileProjectMetadata } from "../../documents/lessoninkFile.types";
+import { deserializeLessonInkFile, serializeLessonInkFile } from "../../documents/lessoninkSerializer";
 import { PresenterMode } from "../../presenter/PresenterMode";
 import { usePresenterStore } from "../../presenter/presenter.store";
 import { TimerPanel } from "../../timer/TimerPanel";
 import { useBoardState } from "../hooks/useBoardState";
 
 export function BoardShell() {
-  const { board, activePage, addPage, setActivePage, setPageObjects } = useBoardState();
+  const { board, activePage, addPage, replaceBoard, setActivePage, setPageObjects } = useBoardState();
   const { isPresenterMode, togglePresenterMode } = usePresenterStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [toolState, setToolState] = useState(initialCanvasToolState);
   const [history, setHistory] = useState(initialCanvasHistoryState);
+  const [project, setProject] = useState<LessonInkFileProjectMetadata>(() => ({
+    id: board.id,
+    title: board.title,
+    createdAt: board.createdAt,
+    updatedAt: board.updatedAt
+  }));
+  const [fileMessage, setFileMessage] = useState<string | undefined>(undefined);
+  const [fileError, setFileError] = useState<string | undefined>(undefined);
 
   const commitObjects = (
     pageId: string,
@@ -100,6 +116,41 @@ export function BoardShell() {
     setHistory(result.history);
   };
 
+  const handleSaveProject = () => {
+    const contents = serializeLessonInkFile(board, project);
+
+    downloadLessonInkFile(contents, getLessonInkDownloadName(project));
+    setFileError(undefined);
+    setFileMessage("Project download started.");
+  };
+
+  const handleOpenProject = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProjectFileSelected = async (event: ChangeEvent<HTMLInputElement>) => {
+    const [file] = event.target.files ?? [];
+    event.target.value = "";
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const contents = await readLessonInkFile(file);
+      const loadedProject = deserializeLessonInkFile(contents);
+
+      replaceBoard(loadedProject.board);
+      setProject(loadedProject.project);
+      setHistory(initialCanvasHistoryState);
+      setFileError(undefined);
+      setFileMessage(`Opened ${file.name}.`);
+    } catch (error) {
+      setFileMessage(undefined);
+      setFileError(error instanceof Error ? error.message : "Could not open the selected LessonInk file.");
+    }
+  };
+
   return (
     <section className={isPresenterMode ? "board-page presenter-active" : "board-page"}>
       <aside className="page-sidebar" aria-label="Board pages">
@@ -131,8 +182,25 @@ export function BoardShell() {
           onUndo={handleUndo}
           onRedo={handleRedo}
           onClear={handleClearCanvas}
+          onSaveProject={handleSaveProject}
+          onOpenProject={handleOpenProject}
           onTogglePresenterMode={togglePresenterMode}
         />
+        <input
+          ref={fileInputRef}
+          accept=".lessonink,application/json,application/vnd.lessonink+json"
+          className="visually-hidden"
+          type="file"
+          onChange={handleProjectFileSelected}
+        />
+        {(fileMessage || fileError) && (
+          <div
+            className={fileError ? "board-file-message error" : "board-file-message"}
+            role={fileError ? "alert" : "status"}
+          >
+            {fileError ?? fileMessage}
+          </div>
+        )}
 
         <CanvasStage
           page={activePage}

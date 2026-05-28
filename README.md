@@ -70,6 +70,13 @@ npm test
 Unit test hiện tại tập trung vào logic canvas cốt lõi: pointer input, stroke utilities,
 hit testing cho eraser, undo/redo history và board/page state. Repo chưa thêm e2e test.
 
+Lưu và mở file bài học cục bộ:
+
+- Vào `Board`.
+- Bấm `Save Project` để tải file `.lessonink` về máy.
+- Bấm `Open Project` để chọn file `.lessonink` đã lưu và khôi phục pages/strokes.
+- Phiên bản hiện tại dùng browser file download/upload fallback; chưa yêu cầu Tauri filesystem API.
+
 Chạy Tauri desktop shell sau khi đã cài Rust và các yêu cầu của Tauri:
 
 ```bash

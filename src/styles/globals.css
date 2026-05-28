@@ -167,7 +167,7 @@ button {
 
 .workspace {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   min-width: 0;
 }
 
@@ -176,6 +176,31 @@ button {
   padding: 10px 16px;
   border-bottom: 1px solid var(--color-line);
   background: var(--color-panel);
+}
+
+.board-file-message {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--color-line);
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 0.9rem;
+}
+
+.board-file-message.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .toolbar-group {

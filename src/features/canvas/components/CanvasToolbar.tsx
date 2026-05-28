@@ -11,6 +11,8 @@ interface CanvasToolbarProps {
   onUndo: () => void;
   onRedo: () => void;
   onClear: () => void;
+  onSaveProject: () => void;
+  onOpenProject: () => void;
   onTogglePresenterMode: () => void;
 }
 
@@ -47,10 +49,21 @@ export function CanvasToolbar({
   onUndo,
   onRedo,
   onClear,
+  onSaveProject,
+  onOpenProject,
   onTogglePresenterMode
 }: CanvasToolbarProps) {
   return (
     <div className="board-toolbar" aria-label="Canvas tools">
+      <div className="toolbar-group" role="group" aria-label="Project file actions">
+        <button className="tool-button" type="button" onClick={onSaveProject}>
+          Save Project
+        </button>
+        <button className="tool-button" type="button" onClick={onOpenProject}>
+          Open Project
+        </button>
+      </div>
+
       <div className="toolbar-group" role="group" aria-label="Drawing tools">
         {spikeTools.map((tool) => (
           <button

@@ -13,6 +13,7 @@ export function useBoardState() {
     board,
     activePage,
     addPage: () => setBoard((current) => addPage(current)),
+    replaceBoard: setBoard,
     setActivePage: (pageId: string) => setBoard((current) => setActivePage(current, pageId)),
     setPageObjects: (pageId: string, objects: CanvasObject[]) =>
       setBoard((current) => setPageObjects(current, pageId, objects))
