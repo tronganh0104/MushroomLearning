@@ -17,6 +17,8 @@ jobs:
   build-windows:
     name: Build Tauri Windows app
     runs-on: windows-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
@@ -45,13 +47,28 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Build Windows desktop app
-        run: npx tauri build
+      - name: Print Tauri environment
+        run: npx tauri info
 
-      - name: Upload Windows desktop artifacts
+      - name: Build Windows desktop executable
+        run: npx tauri build --no-bundle
+
+      - name: Build Windows installer
+        run: npx tauri build --bundles nsis
+        continue-on-error: true
+
+      - name: Upload Windows executable
         uses: actions/upload-artifact@v4
         with:
-          name: mushroomlearning-windows-desktop
+          name: mushroomlearning-windows-exe
+          path: |
+            src-tauri/target/release/*.exe
+          if-no-files-found: error
+
+      - name: Upload Windows installer artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mushroomlearning-windows-installer
           path: |
             src-tauri/target/release/bundle/**/*
-          if-no-files-found: error
+          if-no-files-found: ignore
