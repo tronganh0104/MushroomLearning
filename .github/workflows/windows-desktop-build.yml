@@ -41,6 +41,27 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
+      - name: Validate Tauri assets
+        shell: pwsh
+        run: |
+          $configBytes = [System.IO.File]::ReadAllBytes("src-tauri/tauri.conf.json")
+          if ($configBytes[0] -eq 0xEF -and $configBytes[1] -eq 0xBB -and $configBytes[2] -eq 0xBF) {
+            throw "src-tauri/tauri.conf.json must be UTF-8 without BOM."
+          }
+          Get-Content "src-tauri/tauri.conf.json" -Raw | ConvertFrom-Json | Out-Null
+
+          $iconPath = "src-tauri/icons/icon.ico"
+          if (-not (Test-Path $iconPath)) {
+            throw "$iconPath is required for Windows builds."
+          }
+
+          $iconBytes = [System.IO.File]::ReadAllBytes($iconPath)
+          $entryBitCount = [BitConverter]::ToUInt16($iconBytes, 12)
+          $dibBitCount = [BitConverter]::ToUInt16($iconBytes, 36)
+          if ($entryBitCount -ne 32 -or $dibBitCount -ne 32) {
+            throw "Windows icon must be a 32-bit ICO. Found entry=$entryBitCount dib=$dibBitCount."
+          }
+
       - name: Run unit tests
         run: npm test
 
