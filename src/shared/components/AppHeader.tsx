@@ -1,4 +1,4 @@
-import { Cloud, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import type { AppRoute, RouteDefinition } from "../../app/routes";
 import { useSettings } from "../../features/settings/context/SettingsContext";
 
@@ -19,7 +19,7 @@ export function AppHeader({ activeRoute, routes, onNavigate }: AppHeaderProps) {
     <header className="app-header">
       <div className="app-brand">
         <div className="brand-icon">
-          <Cloud size={20} />
+          <img src="/icons/app-icon.png" alt="" aria-hidden="true" />
         </div>
         <div className="brand-text">
           <strong className="brand-name">MushroomLearning</strong>

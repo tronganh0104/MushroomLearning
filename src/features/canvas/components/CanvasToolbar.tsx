@@ -219,7 +219,9 @@ export function CanvasToolbar({
       {!isPresenterMode && (
         <header className="board-topbar" aria-label="Project actions">
           <div className="board-brand">
-            <div className="brand-logo">ML</div>
+            <div className="brand-logo">
+              <img src="/icons/app-icon.png" alt="" aria-hidden="true" />
+            </div>
             <span className="brand-title">{projectTitle || "Untitled Lesson"}</span>
           </div>
           
@@ -261,7 +263,9 @@ export function CanvasToolbar({
 
       {isPresenterMode && (
         <div className="presenter-live-bar" aria-label="Presenter controls">
-          <div className="presenter-brand">ML</div>
+          <div className="presenter-brand">
+            <img src="/icons/app-icon.png" alt="" aria-hidden="true" />
+          </div>
           <div className="presenter-nav" role="group" aria-label="Presenter page navigation">
             <button className="nav-icon-button" type="button" disabled={!canGoPreviousPage} onClick={onPreviousPage}>
               <ChevronLeft size={20} />

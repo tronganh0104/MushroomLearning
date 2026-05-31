@@ -57,13 +57,22 @@ button {
 .brand-icon {
   width: 36px;
   height: 36px;
-  background: var(--color-accent);
-  color: white;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 12px hsla(var(--h), var(--s), var(--l), 0.3);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.brand-icon img,
+.brand-logo img,
+.presenter-brand img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 .brand-text {
@@ -356,9 +365,12 @@ button {
 }
 
 .presenter-brand {
-  font-weight: 900;
-  color: var(--color-accent);
-  font-size: 0.9rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .presenter-nav {
@@ -431,14 +443,13 @@ button {
 .brand-logo {
   width: 32px;
   height: 32px;
-  background: var(--color-accent);
-  color: white;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
-  font-weight: 900;
-  font-size: 0.9rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .brand-title {
