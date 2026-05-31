@@ -57,7 +57,8 @@ jobs:
 
           $iconBytes = [System.IO.File]::ReadAllBytes($iconPath)
           $entryBitCount = [BitConverter]::ToUInt16($iconBytes, 12)
-          $dibBitCount = [BitConverter]::ToUInt16($iconBytes, 36)
+          $firstImageOffset = [int][BitConverter]::ToUInt32($iconBytes, 18)
+          $dibBitCount = [BitConverter]::ToUInt16($iconBytes, $firstImageOffset + 14)
           if ($entryBitCount -ne 32 -or $dibBitCount -ne 32) {
             throw "Windows icon must be a 32-bit ICO. Found entry=$entryBitCount dib=$dibBitCount."
           }
